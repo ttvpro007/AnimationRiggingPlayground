@@ -4,25 +4,23 @@ public class MoveToTarget : MonoBehaviour
 {
     [SerializeField] private Transform tip;
     [SerializeField] private float moveSpeed;
-    private Transform target;
+    [SerializeField] private Transform moveTarget;
+    [SerializeField] private Transform lookTarget;
 
-    // Start is called before the first frame update
-    private void Start()
-    {
-        
-    }
+    private bool isInRange = false;
 
     // Update is called once per frame
     private void Update()
     {
-        if (!target) return;
+        if (!isInRange) return;
 
         Move();
+        Rotate();
     }
 
     private void Move()
     {
-        Vector3 tipToTarget = target.position - tip.position;
+        Vector3 tipToTarget = moveTarget.position - tip.position;
         if (Vector3.SqrMagnitude(tipToTarget) > 0.2f)
         {
             tip.position += moveSpeed * Time.deltaTime * tipToTarget.normalized;
@@ -31,14 +29,15 @@ public class MoveToTarget : MonoBehaviour
 
     private void Rotate()
     {
-
+        Quaternion lookRotation = Quaternion.LookRotation((lookTarget.position - tip.position).normalized);
+        tip.rotation = Quaternion.Slerp(tip.rotation, lookRotation, Time.deltaTime);
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Player")
         {
-            target = other.transform.Find("ModelRoot").Find("EyeTracker");
+            isInRange = true;
         }
     }
 
@@ -46,7 +45,7 @@ public class MoveToTarget : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            target = null;
+            isInRange = false;
         }
     }
 }

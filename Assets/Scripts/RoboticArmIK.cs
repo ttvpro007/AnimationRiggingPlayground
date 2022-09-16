@@ -32,6 +32,8 @@ public struct RoboticArmIKJob : IWeightedAnimationJob
         float w = jobWeight.Get(stream);
         if (w > 0f)
         {
+            //p = target.GetPosition(stream) - offset;
+            //r = target.GetRotation(stream).eulerAngles;
             p = target.GetPosition(stream) - offset;
             r = target.GetRotation(stream).eulerAngles;
             p = new Vector3(p.z, p.x, p.y);
@@ -78,18 +80,12 @@ public struct RoboticArmIKJob : IWeightedAnimationJob
             theta[4] = math.atan2(math.cos((float)theta[3]) * asx + math.sin((float)theta[3]) * asy, asz);
             theta[5] = math.atan2(math.cos((float)theta[3]) * bsy - math.sin((float)theta[3]) * bsx, -bsz / math.sin((float)theta[4]));
 
-            if (!double.IsNaN(theta[0]))
-                joints[1].SetLocalRotation(stream, quaternion.Euler(Vector3.forward * (float)(theta[0] * w)));
-            if (!double.IsNaN(theta[1]))
-                joints[2].SetLocalRotation(stream, quaternion.Euler(Vector3.right * (float)(theta[1] * w)));
-            if (!double.IsNaN(theta[2]))
-                joints[3].SetLocalRotation(stream, quaternion.Euler(Vector3.right * (float)(theta[2] * w)));
-            if (!double.IsNaN(theta[3]))
-                joints[4].SetLocalRotation(stream, quaternion.Euler(Vector3.forward * (float)(theta[3] * w)));
-            if (!double.IsNaN(theta[4]))
-                joints[5].SetLocalRotation(stream, quaternion.Euler(Vector3.right * (float)(theta[4] * w)));
-            if (!double.IsNaN(theta[5]))
-                joints[6].SetLocalRotation(stream, quaternion.Euler(Vector3.forward * (float)(theta[5] * w)));
+            if (!double.IsNaN(theta[0])) joints[1].SetLocalRotation(stream, quaternion.Euler(Vector3.forward * (float)(theta[0] * w)));
+            if (!double.IsNaN(theta[1])) joints[2].SetLocalRotation(stream, quaternion.Euler(Vector3.right * (float)(theta[1] * w)));
+            if (!double.IsNaN(theta[2])) joints[3].SetLocalRotation(stream, quaternion.Euler(Vector3.right * (float)(theta[2] * w)));
+            if (!double.IsNaN(theta[3])) joints[4].SetLocalRotation(stream, quaternion.Euler(Vector3.forward * (float)(theta[3] * w)));
+            if (!double.IsNaN(theta[4])) joints[5].SetLocalRotation(stream, quaternion.Euler(Vector3.right * (float)(theta[4] * w)));
+            if (!double.IsNaN(theta[5])) joints[6].SetLocalRotation(stream, quaternion.Euler(Vector3.forward * (float)(theta[5] * w)));
         }
     }
 }
