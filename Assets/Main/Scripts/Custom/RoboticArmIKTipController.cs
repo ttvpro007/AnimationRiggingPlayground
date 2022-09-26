@@ -4,13 +4,12 @@ public class RoboticArmIKTipController : MonoBehaviour
 {
     [SerializeField] private Transform tip;
     [SerializeField] private float moveSpeed;
-    [SerializeField] private Transform moveTarget;
-    [SerializeField] private Transform lookTarget;
+    [SerializeField] private Transform target;
 
     private bool isInRange = false;
     private Vector3 sleepPosition;
     private Quaternion sleepRotation;
-    private float moveThreshold = 0.005f;
+    private readonly float moveThreshold = 0.005f;
 
     private void Start()
     {
@@ -42,13 +41,14 @@ public class RoboticArmIKTipController : MonoBehaviour
 
     private void Rotate(Quaternion lookRotation)
     {
-        tip.rotation = Quaternion.Slerp(tip.rotation, lookRotation, Time.deltaTime);
+        tip.rotation = Quaternion.Slerp(tip.rotation, lookRotation, Time.deltaTime * 2f);
     }
 
     private void Track()
     {
-        Move(moveTarget.position);
-        Rotate(Quaternion.LookRotation((lookTarget.position - tip.position).normalized));
+        Move(target.position);
+        //Rotate(Quaternion.LookRotation((lookTarget.position - tip.position).normalized));
+        Rotate(target.rotation);
     }
 
     private void Sleep()
